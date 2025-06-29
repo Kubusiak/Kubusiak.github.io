@@ -1,28 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Totally Not a Rickroll</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background-color: black;
-    }
-    iframe {
-      width: 100vw;
-      height: 100vh;
-      border: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoodtwarzanie Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+        }
+        
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-  <iframe 
-    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&showinfo=0&modestbranding=1&rel=0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
-  </iframe>
+    <video id="video" loop>
+        <source src="video.mp4" type="video/mp4">
+        Twoja przeglądarka nie obsługuje video.
+    </video>
+
+    <script>
+        const video = document.getElementById('video');
+        
+        // Próba 1: Od razu z dźwiękiem
+        video.play().catch(() => {
+            // Próba 2: Bez dźwięku, potem włącz
+            video.muted = true;
+            video.play().then(() => {
+                // Po 100ms spróbuj włączyć dźwięk
+                setTimeout(() => {
+                    video.muted = false;
+                }, 100);
+            });
+        });
+        
+        // Próba 3: Na pierwsze kliknięcie/dotknięcie gdziekolwiek
+        function enableAudio() {
+            video.muted = false;
+            video.play();
+            document.removeEventListener('click', enableAudio);
+            document.removeEventListener('touchstart', enableAudio);
+        }
+        
+        document.addEventListener('click', enableAudio);
+        document.addEventListener('touchstart', enableAudio);
+        
+        // Próba 4: Maksymalna głośność
+        video.volume = 1.0;
+    </script>
 </body>
 </html>
